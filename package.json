@@ -1,0 +1,14 @@
+{
+  "name": "my-mongodb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Mongodb.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alex",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^2.2.10"
+  }
+}
