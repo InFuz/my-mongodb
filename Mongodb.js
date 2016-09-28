@@ -14,15 +14,19 @@ const Mongodb = {
     });
   },
 
-  find: (collection, id, cb) => {
-    id = ObjectId(id);
-    let con = Mongodb.DB.collection(collection);
-    con.findOne({_id: id}, (err, result) => cb(err, result));
+  find: (collection, id) => {
+    return new Promise ((res, rej) => {
+      id = ObjectId(id);
+      let con = Mongodb.DB.collection(collection);
+      con.findOne({_id: id}, (err, result) => cb(err, result));  
+    });
   },
 
-  findAll: (collection, cb) => {
-    let con = Mongodb.DB.collection(collection);
-    con.find({}).toArray((err, result) => cb(err, result));
+  findAll: (collection) => {
+    return new Promise ((res, rej) => {
+      let con = Mongodb.DB.collection(collection);
+      con.find({}).toArray((err, result) => err ? rej(err) : res(result));
+    });
   },
 
   insert: (collection, data, cb) => {
