@@ -9,9 +9,7 @@ const Mongodb = {
   connect: () => {
     return new Promise ((res, rej) => {
       MongoClient.connect(url, (err, db) => {
-        if (err) { console.error(err); }
-        Mongodb.DB = db;
-        rej (err);
+        err ? rej (err) : (Mongodb.DB = db, res());
       });
     });
   },
@@ -50,10 +48,10 @@ const Mongodb = {
     return new Promise ((res, rej) => {
       let con = Mongodb.DB.collection(collection);
       con.deleteOne({_id: id}, (err, result) => {
-        if (err) {rej(err)};
+        err ? rej (err) : res(result);
       });
     })
-  },
+  }
 }
 
 module.exports = Mongodb;
