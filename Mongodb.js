@@ -16,7 +16,7 @@ const Mongodb = {
 
   find: (collection, id) => {
     return new Promise ((res, rej) => {
-      id = ObjectId(id);
+      id = ObjectId(id.toString());
       let con = Mongodb.DB.collection(collection);
       con.findOne({_id: id}, (err, result) => err ? rej(err) : res(result));  
     });
