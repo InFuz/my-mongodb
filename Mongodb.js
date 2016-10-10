@@ -3,43 +3,55 @@
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectID;
 
-const url = 'mongodb://localhost:27017/myproject';
+const url = 'mongodb://localhost:27017/simple_chat';
 
 const Mongodb = {
-  connect: (cb) => {
-    MongoClient.connect(url, (err, db) => {
-      if (err) { console.error(err); }
-      Mongodb.DB = db;
-      cb(err);
+  connect: () => {
+    return new Promise ((res, rej) => {
+      MongoClient.connect(url, (err, db) => {
+        err ? rej (err) : (Mongodb.DB = db, res());
+      });
     });
   },
 
-  find: (collection, id, cb) => {
-    id = ObjectId(id);
-    let con = Mongodb.DB.collection(collection);
-    con.findOne({_id: id}, (err, result) => cb(err, result));
+  find: (collection, id) => {
+    return new Promise ((res, rej) => {
+      id = ObjectId(id.toString());
+      let con = Mongodb.DB.collection(collection);
+      con.findOne({_id: id}, (err, result) => err ? rej(err) : res(result));  
+    });
   },
 
-  findAll: (collection, cb) => {
-    let con = Mongodb.DB.collection(collection);
-    con.find({}).toArray((err, result) => cb(err, result));
+  findAll: (collection) => {
+    return new Promise ((res, rej) => {
+      let con = Mongodb.DB.collection(collection);
+      con.find({}).toArray((err, result) => err ? rej(err) : res(result));
+    });
   },
 
-  insert: (collection, data, cb) => {
-    let con = Mongodb.DB.collection(collection);
-    con.insertOne(data, (err, result) => cb(err, result.insertedId));
+  insert: (collection, data) => {
+    return new Promise ((res, rej) => {
+      let con = Mongodb.DB.collection(collection);
+      con.insertOne(data, (err, result) => err ? rej(err) : res(result.insertedId));
+    })
   },
 
-  update: (collection, id, data, cb) => {
-    id = ObjectId(id);
-    let con = Mongodb.DB.collection(collection);
-    con.update({_id: id}, data, (err, result) => cb(err, id));
+  update: (collection, id, data) => {
+    return new Promise ((res, rej) => {
+      id = ObjectId(id);
+      let con = Mongodb.DB.collection(collection);
+      con.update({_id: id}, data, (err, result) => err ? rej(err) : res(id));
+    })
   },
 
-  delete: (collection, id, cb) => {
-    let con = Mongodb.DB.collection(collection);
-    con.deleteOne({_id: id}, (err, result) => cb(err));
-  },
+  delete: (collection, id) => {
+    return new Promise ((res, rej) => {
+      let con = Mongodb.DB.collection(collection);
+      con.deleteOne({_id: id}, (err, result) => {
+        err ? rej (err) : res(result);
+      });
+    })
+  }
 }
 
 module.exports = Mongodb;
